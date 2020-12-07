@@ -6,15 +6,12 @@ using System.Threading.Tasks;
 
 namespace ApplicationChallengeAPI.Models
 {
-    public class Ploeg
+    public class Tournooi
     {
-        public int PloegID { get; set; }
+        public int TournooiID { get; set; }
         public string Naam { get; set; }
-        public string Bedrijfsnaam { get; set; }
-        public string Locatie { get; set; }
-        public string PloegFoto { get; set; }
 
         [JsonIgnore]
-        public ICollection<User> Leden { get; set; }
+        public ICollection<Competitie> Competities { get; set; }
     }
 }

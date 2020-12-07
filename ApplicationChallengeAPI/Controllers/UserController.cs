@@ -33,8 +33,8 @@ namespace ApplicationChallengeAPI.Controllers
             var email = User.Claims.FirstOrDefault(c => c.Type == "Email").Value;
             return await _context.Users.ToListAsync();
         }
-        // GET: api/User/Role/1
-        [HttpGet("Role/{id}")]
+        // GET: api/User/Ploeg/1
+        [HttpGet("Ploeg/{id}")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsersByPloeg(int id)
         {
             return await _context.Users.Where(x => x.PloegID == id).ToListAsync();

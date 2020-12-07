@@ -15,14 +15,13 @@ namespace ApplicationChallengeAPI.Models
         public string Geboortedatum { get; set; }
         public string Foto { get; set; }
         public string Passwoord { get; set; }
+        public bool IsAdmin { get; set; }
+        public bool IsKapitein { get; set; }
         [NotMapped]
         public string Token { get; set; }
 
         //Relations
-        public int PloegID { get; set; }
+        public int? PloegID { get; set; }
         public Ploeg Ploeg { get; set; }
-
-        [JsonIgnore]
-        public ICollection<Ploeg> Crews { get; set; }
     }
 }
