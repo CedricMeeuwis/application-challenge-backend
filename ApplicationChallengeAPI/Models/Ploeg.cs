@@ -13,7 +13,7 @@ namespace ApplicationChallengeAPI.Models
         public string Bedrijfsnaam { get; set; }
         public string Locatie { get; set; }
         public string PloegFoto { get; set; }
-
+      
         [JsonIgnore]
         public ICollection<User> Leden { get; set; }
     }
