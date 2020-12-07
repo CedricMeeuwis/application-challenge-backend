@@ -95,7 +95,7 @@ namespace ApplicationChallengeAPI.Controllers
                 return BadRequest();
             }
 
-            if (user.Passwoord != "")
+            if (user.Passwoord != "" && user.Passwoord != null)
             {
                 byte[] salt;
                 new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
@@ -109,9 +109,14 @@ namespace ApplicationChallengeAPI.Controllers
 
                 string savedPasswordHash = Convert.ToBase64String(hashBytes);
                 user.Passwoord = savedPasswordHash;
-            }
 
-            _context.Entry(user).State = EntityState.Modified;
+                _context.Entry(user).State = EntityState.Modified;
+            }
+            else
+            {
+                _context.Entry(user).State = EntityState.Modified;
+                _context.Entry(user).Property(u => u.Passwoord).IsModified = false;
+            }
 
             try
             {
@@ -128,7 +133,7 @@ namespace ApplicationChallengeAPI.Controllers
                     throw;
                 }
             }
-
+            user.Passwoord = null;
             return user;
         }
 
