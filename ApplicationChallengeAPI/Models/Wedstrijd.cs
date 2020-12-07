@@ -17,14 +17,14 @@ namespace ApplicationChallengeAPI.Models
         //Relations
 
         //Home spelers
-        public int HomeUser1ID { get; set; }
+        public int? HomeUser1ID { get; set; }
         public User HomeUser1 { get; set; }
         //optioneel voor 1v1
         public int? HomeUser2ID { get; set; }
         public User HomeUser2 { get; set; }
 
         //Away spelers
-        public int AwayUser1ID { get; set; }
+        public int? AwayUser1ID { get; set; }
         public User AwayUser1 { get; set; }
         //optioneel voor 1v1
         public int? AwayUser2ID { get; set; }
