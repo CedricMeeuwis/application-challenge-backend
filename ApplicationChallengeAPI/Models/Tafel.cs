@@ -15,7 +15,8 @@ namespace ApplicationChallengeAPI.Models
         public string Adres { get; set; }
         public string Foto { get; set; }
 
-        public int ContactpersoonID { get; set; }
-        public User Contactpersoon { get; set; }
+        public string ContactTelefoon { get; set; }
+        public string ContactNaam { get; set; }
+        public string ContactEmail { get; set; }
     }
 }

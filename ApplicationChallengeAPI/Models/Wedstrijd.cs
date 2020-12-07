@@ -13,9 +13,12 @@ namespace ApplicationChallengeAPI.Models
         public int HomeScore { get; set; }
         public int AwayScore { get; set; }
         public bool Bezig { get; set; }
-
+        public bool Akkoord { get; set; }
         //Relations
-
+        public int TournooiID { get; set; }
+        public Tournooi Tournooi { get; set; }
+        public int CompetitieID { get; set; }
+        public Competitie Competitie { get; set; }
         //Home spelers
         public int? HomeUser1ID { get; set; }
         public User HomeUser1 { get; set; }

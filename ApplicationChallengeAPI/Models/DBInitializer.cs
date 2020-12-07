@@ -47,8 +47,8 @@ namespace ApplicationChallengeAPI.Models
             context.SaveChanges();
 
             context.Tafels.AddRange(
-                new Tafel { Naam = "Tafel jstack", Bedrijfsnaam = "jstack", Adres = "Veldkant 33b, Kontich", ContactpersoonID = 1 },
-                new Tafel { Naam = "Tafel TM", Bedrijfsnaam = "Thomas more", Adres = "Kleinhoefstraat 4, Geel", ContactpersoonID = 4 }
+                new Tafel { Naam = "Tafel jstack", Bedrijfsnaam = "jstack", Adres = "Veldkant 33b, Kontich", ContactTelefoon = "04958536", ContactNaam = "Erik", ContactEmail = "ee@test.be" },
+                new Tafel { Naam = "Tafel TM", Bedrijfsnaam = "Thomas more", Adres = "Kleinhoefstraat 4, Geel", ContactTelefoon = "04856921", ContactNaam = "David", ContactEmail = "aa@test.be" }
             );
             context.SaveChanges();
         }

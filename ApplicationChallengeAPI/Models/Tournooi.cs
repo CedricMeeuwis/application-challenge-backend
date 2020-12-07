@@ -10,8 +10,9 @@ namespace ApplicationChallengeAPI.Models
     {
         public int TournooiID { get; set; }
         public string Naam { get; set; }
+        public int CompetitieID { get; set; }
 
         [JsonIgnore]
-        public ICollection<Competitie> Competities { get; set; }
+        public ICollection<Wedstrijd> Wedstrijden { get; set; }
     }
 }
