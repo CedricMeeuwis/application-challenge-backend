@@ -25,13 +25,13 @@ namespace ApplicationChallengeAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Ploeg>>> GetPloegen()
         {
-            return await _context.Ploegen.Include(k => k.Kapitein).ToListAsync();
+            return await _context.Ploegen.Include(u => u.Leden).ToListAsync();
         }
         // GET: api/Ploeg/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Ploeg>> GetPloeg(int id)
         {
-            var ploeg = await _context.Ploegen.Include(k => k.Kapitein).SingleOrDefaultAsync(i => i.PloegID == id);
+            var ploeg = await _context.Ploegen.Include(u => u.Leden).SingleOrDefaultAsync(i => i.PloegID == id);
 
             if (ploeg == null)
             {

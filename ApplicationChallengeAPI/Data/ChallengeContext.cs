@@ -19,18 +19,19 @@ namespace ApplicationChallengeAPI.Data
         public DbSet<Ploeg> Ploegen { get; set; }
 
         public DbSet<Tafel> Tafels { get; set; }
-        
+        public DbSet<Wedstrijd> Wedstrijden { get; set; }
+        public DbSet<Competitie> Competities { get; set; }
+        public DbSet<Tournooi> Tournooien { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().ToTable("User");
             modelBuilder.Entity<Tafel>().ToTable("Tafel");
             modelBuilder.Entity<Ploeg>().ToTable("Ploeg");
-
-            modelBuilder.Entity<Ploeg>()
-                .HasOne(p => p.Kapitein)
-                .WithMany(u => u.Crews)
-                .HasForeignKey(p => p.KapiteinID);
+            modelBuilder.Entity<Wedstrijd>().ToTable("Wedstrijd");
+            modelBuilder.Entity<Competitie>().ToTable("Competitie");
+            modelBuilder.Entity<Tournooi>().ToTable("Tournooi");
         }
     }
 }
