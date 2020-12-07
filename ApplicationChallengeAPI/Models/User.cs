@@ -12,14 +12,14 @@ namespace ApplicationChallengeAPI.Models
         public int UserID { get; set; }
         public string Email { get; set; }
         public string Naam { get; set; }
-        public string Geboortedatum { get; set; }
+        public DateTime Geboortedatum { get; set; }
         public string Foto { get; set; }
         public string Passwoord { get; set; }
         [NotMapped]
         public string Token { get; set; }
 
         //Relations
-        public int PloegID { get; set; }
+        public int? PloegID { get; set; }
         public Ploeg Ploeg { get; set; }
 
         [JsonIgnore]

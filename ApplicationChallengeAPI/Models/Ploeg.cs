@@ -16,7 +16,7 @@ namespace ApplicationChallengeAPI.Models
 
         //Relations
         public int? KapiteinID { get; set; }
-        public User? Kapitein { get; set; }
+        public User Kapitein { get; set; }
 
         [JsonIgnore]
         public ICollection<User> Leden { get; set; }
