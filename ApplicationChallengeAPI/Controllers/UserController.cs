@@ -27,13 +27,45 @@ namespace ApplicationChallengeAPI.Controllers
             _context = context;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            var email = User.Claims.FirstOrDefault(c => c.Type == "Email").Value;
-            return await _context.Users.ToListAsync();
+            //var email = User.Claims.FirstOrDefault(c => c.Type == "Email").Value;
+
+            //alle users zonder passwoorden
+            return await _context.Users.Select(u => new User
+            {
+                UserID = u.UserID,
+                Naam = u.Naam,
+                Email = u.Email,
+                Foto = u.Foto,
+                Geboortedatum = u.Geboortedatum,
+                IsAdmin = u.IsAdmin,
+                IsKapitein = u.IsKapitein,
+                PloegID = u.PloegID,
+                Ploeg = u.Ploeg
+            }).ToListAsync();
         }
+
+        [HttpGet("Ploegloos")]
+        public async Task<ActionResult<IEnumerable<User>>> GetUsersZonderPloeg()
+        {
+            //alle users zonder passwoorden
+            return await _context.Users.Select(u => new User
+            {
+                UserID = u.UserID,
+                Naam = u.Naam,
+                Email = u.Email,
+                Foto = u.Foto,
+                Geboortedatum = u.Geboortedatum,
+                IsAdmin = u.IsAdmin,
+                IsKapitein = u.IsKapitein,
+                PloegID = u.PloegID,
+                Ploeg = u.Ploeg
+            }).Where(u => u.PloegID.HasValue == false).ToListAsync();
+        }
+
         // GET: api/User/Ploeg/1
         [HttpGet("Ploeg/{id}")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsersByPloeg(int id)
