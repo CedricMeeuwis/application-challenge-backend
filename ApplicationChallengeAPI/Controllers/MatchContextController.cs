@@ -101,5 +101,32 @@ namespace ApplicationChallengeAPI.Controllers
         {
             return _context.MatchContexten.Any(e => e.MatchContextID == id);
         }
+
+        [HttpGet("User/{id}")]
+        public async Task<ActionResult<IEnumerable<MatchContext>>> GetMatchContextenUser(int id)
+        {
+            return await _context.MatchContexten
+                .Include(w => w.Wedstrijd)
+                    .ThenInclude(u => u.Team1User1)
+                        .ThenInclude(i => i.Ploeg)
+                .Include(w => w.Wedstrijd)
+                    .ThenInclude(u => u.Team1User2)
+                .Include(w => w.Wedstrijd)
+                    .ThenInclude(u => u.Team2User1)
+                        .ThenInclude(i => i.Ploeg)
+                .Include(w => w.Wedstrijd)
+                    .ThenInclude(u => u.Team2User2)
+                .Include(w => w.Wedstrijd)
+                    .ThenInclude(t => t.Tafel)
+                .Include(t => t.Tournooi)
+                .Where(m => (m.Wedstrijd.Team1User1ID == id || 
+                            m.Wedstrijd.Team1User2ID == id  || 
+                            m.Wedstrijd.Team2User1ID == id  || 
+                            m.Wedstrijd.Team2User2ID == id) &&
+                            m.Wedstrijd.Bezig == false)
+                .OrderByDescending(w => w.MatchContextID)
+                .ToListAsync();
+        }
+
     }
 }

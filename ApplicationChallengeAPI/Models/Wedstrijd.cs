@@ -30,7 +30,7 @@ namespace ApplicationChallengeAPI.Models
         public int? Team2User2ID { get; set; }
         public User Team2User2 { get; set; }
 
-        public int TefelID { get; set; }
+        public int TafelID { get; set; }
         public Tafel Tafel { get; set; }
     }
 }
