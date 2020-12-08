@@ -16,5 +16,7 @@ namespace ApplicationChallengeAPI.Models
       
         [JsonIgnore]
         public ICollection<User> Leden { get; set; }
+        [JsonIgnore]
+        public ICollection<Challenge> Challenges { get; set; }
     }
 }
