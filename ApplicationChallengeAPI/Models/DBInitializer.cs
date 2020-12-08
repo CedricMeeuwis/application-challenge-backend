@@ -29,19 +29,19 @@ namespace ApplicationChallengeAPI.Models
 
             context.Users.AddRange(
                 //Kapiteinen
-                new User { Email = "aa@test.be", Naam = "Andre Andermans",  Geboortedatum = DateTime.Now.AddDays(-7000), Passwoord = "test", PloegID = 1, IsKapitein = true },
-                new User { Email = "bb@test.be", Naam = "Barry Barrens", Geboortedatum = DateTime.Now.AddDays(-7000), Passwoord = "test", PloegID = 2, IsKapitein = true },
-                new User { Email = "cc@test.be", Naam = "Connie Conners", Geboortedatum = DateTime.Now.AddDays(-7000), Passwoord = "test", PloegID = 3, IsKapitein = true },
-                new User { Email = "dd@test.be", Naam = "David Deckers", Geboortedatum = DateTime.Now.AddDays(-7000), Passwoord = "test", PloegID = 4, IsKapitein = true },
+                new User { Email = "aa@test.be", Naam = "Andre Andermans",  Geboortedatum = DateTime.Now.AddDays(-7000), Passwoord = "o6w8D+OE1/nhuMhyD1iKz4JkqmDFH3Sk8s5kV1FnNPRah5ot", PloegID = 1, IsKapitein = true },
+                new User { Email = "bb@test.be", Naam = "Barry Barrens", Geboortedatum = DateTime.Now.AddDays(-7000), Passwoord = "o6w8D+OE1/nhuMhyD1iKz4JkqmDFH3Sk8s5kV1FnNPRah5ot", PloegID = 2, IsKapitein = true },
+                new User { Email = "cc@test.be", Naam = "Connie Conners", Geboortedatum = DateTime.Now.AddDays(-7000), Passwoord = "o6w8D+OE1/nhuMhyD1iKz4JkqmDFH3Sk8s5kV1FnNPRah5ot", PloegID = 3, IsKapitein = true },
+                new User { Email = "dd@test.be", Naam = "David Deckers", Geboortedatum = DateTime.Now.AddDays(-7000), Passwoord = "o6w8D+OE1/nhuMhyD1iKz4JkqmDFH3Sk8s5kV1FnNPRah5ot", PloegID = 4, IsKapitein = true },
                 //Gebruikers
-                new User { Email = "ee@test.be", Naam = "Erik Erens", Geboortedatum = DateTime.Now.AddDays(-7000), Passwoord = "test", PloegID = 1 },
-                new User { Email = "ff@test.be", Naam = "Femke Feyen", Geboortedatum = DateTime.Now.AddDays(-7000), Passwoord = "test", PloegID = 2 },
-                new User { Email = "gg@test.be", Naam = "Gerrie Gachternaam", Geboortedatum = DateTime.Now.AddDays(-7000), Passwoord = "test", PloegID = 3 },
-                new User { Email = "hh@test.be", Naam = "Harry Hekkens", Geboortedatum = DateTime.Now.AddDays(-7000), Passwoord = "test", PloegID = 4 },
+                new User { Email = "ee@test.be", Naam = "Erik Erens", Geboortedatum = DateTime.Now.AddDays(-7000), Passwoord = "o6w8D+OE1/nhuMhyD1iKz4JkqmDFH3Sk8s5kV1FnNPRah5ot", PloegID = 1 },
+                new User { Email = "ff@test.be", Naam = "Femke Feyen", Geboortedatum = DateTime.Now.AddDays(-7000), Passwoord = "o6w8D+OE1/nhuMhyD1iKz4JkqmDFH3Sk8s5kV1FnNPRah5ot", PloegID = 2 },
+                new User { Email = "gg@test.be", Naam = "Gerrie Gachternaam", Geboortedatum = DateTime.Now.AddDays(-7000), Passwoord = "o6w8D+OE1/nhuMhyD1iKz4JkqmDFH3Sk8s5kV1FnNPRah5ot", PloegID = 3 },
+                new User { Email = "hh@test.be", Naam = "Harry Hekkens", Geboortedatum = DateTime.Now.AddDays(-7000), Passwoord = "o6w8D+OE1/nhuMhyD1iKz4JkqmDFH3Sk8s5kV1FnNPRah5ot", PloegID = 4 },
                 //Testdata voor inloggen
-                new User { Email = "kapitein@test.be", Naam = "Kapitein Test", Geboortedatum = DateTime.Now.AddDays(-7000), Passwoord = "test" , PloegID = 5, IsKapitein=true},
-                new User { Email = "gebruiker@test.be", Naam = "Gebruiker Test", Geboortedatum = DateTime.Now.AddDays(-7000), Passwoord = "test"},
-                new User { Email = "admin@test.be", Naam = "Admin Test", Geboortedatum = DateTime.Now.AddDays(-7000), Passwoord = "test", IsAdmin = true}
+                new User { Email = "kapitein@test.be", Naam = "Kapitein Test", Geboortedatum = DateTime.Now.AddDays(-7000), Passwoord = "o6w8D+OE1/nhuMhyD1iKz4JkqmDFH3Sk8s5kV1FnNPRah5ot", PloegID = 5, IsKapitein=true},
+                new User { Email = "gebruiker@test.be", Naam = "Gebruiker Test", Geboortedatum = DateTime.Now.AddDays(-7000), Passwoord = "o6w8D+OE1/nhuMhyD1iKz4JkqmDFH3Sk8s5kV1FnNPRah5ot" },
+                new User { Email = "admin@test.be", Naam = "Admin Test", Geboortedatum = DateTime.Now.AddDays(-7000), Passwoord = "o6w8D+OE1/nhuMhyD1iKz4JkqmDFH3Sk8s5kV1FnNPRah5ot", IsAdmin = true}
 
             );
             context.SaveChanges();
