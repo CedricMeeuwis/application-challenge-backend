@@ -22,6 +22,7 @@ namespace ApplicationChallengeAPI.Data
         public DbSet<Wedstrijd> Wedstrijden { get; set; }
         public DbSet<Competitie> Competities { get; set; }
         public DbSet<Tournooi> Tournooien { get; set; }
+        public DbSet<MatchContext> MatchContexten { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -32,6 +33,7 @@ namespace ApplicationChallengeAPI.Data
             modelBuilder.Entity<Wedstrijd>().ToTable("Wedstrijd");
             modelBuilder.Entity<Competitie>().ToTable("Competitie");
             modelBuilder.Entity<Tournooi>().ToTable("Tournooi");
+            modelBuilder.Entity<MatchContext>().ToTable("MatchContext");
         }
     }
 }

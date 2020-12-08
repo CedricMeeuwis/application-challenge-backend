@@ -13,6 +13,6 @@ namespace ApplicationChallengeAPI.Models
         public int ParticipentAantal { get; set; }//1 = 1v1; 2 = 2v2
 
         [JsonIgnore]
-        public ICollection<Wedstrijd> Wedstrijden { get; set; }
+        public ICollection<MatchContext> MatchContexten { get; set; }
     }
 }
