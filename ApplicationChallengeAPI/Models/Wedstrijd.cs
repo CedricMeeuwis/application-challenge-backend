@@ -29,5 +29,8 @@ namespace ApplicationChallengeAPI.Models
         //optioneel voor 1v1
         public int? Team2User2ID { get; set; }
         public User Team2User2 { get; set; }
+
+        public int TefelID { get; set; }
+        public Tafel Tafel { get; set; }
     }
 }
