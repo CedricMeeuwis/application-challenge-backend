@@ -47,6 +47,25 @@ namespace ApplicationChallengeAPI.Controllers
                 Ploeg = u.Ploeg
             }).ToListAsync();
         }
+
+        [HttpGet("Ploegloos")]
+        public async Task<ActionResult<IEnumerable<User>>> GetUsersZonderPloeg()
+        {
+            return await _context.Users.Select(u => new User
+            {
+                UserID = u.UserID,
+                Naam = u.Naam,
+                Email = u.Email,
+                Foto = u.Foto,
+                Geboortedatum = u.Geboortedatum,
+                IsAdmin = u.IsAdmin,
+                IsKapitein = u.IsKapitein,
+                PloegID = u.PloegID,
+                Ploeg = u.Ploeg
+            }).Where(u => u.PloegID.HasValue == false).ToListAsync();
+        }
+
+
         // GET: api/User/Ploeg/1
         [HttpGet("Ploeg/{id}")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsersByPloeg(int id)
@@ -138,7 +157,7 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody]User userParam)
+        public IActionResult Authenticate([FromBody] User userParam)
         {
             //getuser
             User user = _context.Users.Where(x => x.Email == userParam.Email).FirstOrDefault();
