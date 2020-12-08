@@ -26,10 +26,10 @@ namespace ApplicationChallengeAPI.Controllers
         public async Task<ActionResult<IEnumerable<Wedstrijd>>> GetWedstrijden()
         {
             return await _context.Wedstrijden
-                .Include(k => k.HomeUser1)
-                .Include(k => k.HomeUser2)
-                .Include(k => k.AwayUser1)
-                .Include(k => k.AwayUser2)
+                .Include(k => k.Team1User1)
+                .Include(k => k.Team1User2)
+                .Include(k => k.Team2User1)
+                .Include(k => k.Team2User2)
                 .ToListAsync();
         }
         // GET: api/Wedstrijd/5
@@ -37,10 +37,10 @@ namespace ApplicationChallengeAPI.Controllers
         public async Task<ActionResult<Wedstrijd>> GetWedstrijd(int id)
         {
             var wedstrijd = await _context.Wedstrijden
-                .Include(k => k.HomeUser1)
-                .Include(k => k.HomeUser2)
-                .Include(k => k.AwayUser1)
-                .Include(k => k.AwayUser2)
+                .Include(k => k.Team1User1)
+                .Include(k => k.Team1User2)
+                .Include(k => k.Team2User1)
+                .Include(k => k.Team2User2)
                 .SingleOrDefaultAsync(i => i.WedstrijdID == id);
 
             if (wedstrijd == null)
