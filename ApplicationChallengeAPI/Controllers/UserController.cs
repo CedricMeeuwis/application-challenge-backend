@@ -39,6 +39,23 @@ namespace ApplicationChallengeAPI.Controllers
         {
             return await _context.Users.Where(x => x.PloegID == id).ToListAsync();
         }
+        // GET: api/User/Ploeg
+        [HttpGet("Ploeg")]
+        public async Task<ActionResult<IEnumerable<User>>> GetUsersHasPloeg()
+        {
+            return await _context.Users.Where(x => x.PloegID != null).Include(p => p.Ploeg).Select(u => new User
+            {
+                UserID = u.UserID,
+                Naam = u.Naam,
+                Email = u.Email,
+                Foto = u.Foto,
+                Geboortedatum = u.Geboortedatum,
+                IsAdmin = u.IsAdmin,
+                IsKapitein = u.IsKapitein,
+                PloegID = u.PloegID,
+                Ploeg = u.Ploeg
+            }).ToListAsync();
+        }
         // GET: api/User/1
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)

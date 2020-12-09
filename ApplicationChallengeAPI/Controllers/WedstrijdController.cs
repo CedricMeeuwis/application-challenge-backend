@@ -32,6 +32,18 @@ namespace ApplicationChallengeAPI.Controllers
                 .Include(k => k.Team2User2)
                 .ToListAsync();
         }
+        // GET: api/Wedstrijd
+        [HttpGet("Tournooi/{id}")]
+        public async Task<ActionResult<IEnumerable<Wedstrijd>>> GetWedstrijdenOfTournooi(int id)
+        {
+            return await _context.Wedstrijden.Where(w => w.MatchContext.TournooiID == id).OrderBy(w => w.MatchContext.TournooiRangschikking)
+                .Include(k => k.Team1User1)
+                .Include(k => k.Team1User2)
+                .Include(k => k.Team2User1)
+                .Include(k => k.Team2User2)
+                .Include(m => m.MatchContext)
+                .ToListAsync();
+        }
         // GET: api/Wedstrijd/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Wedstrijd>> GetWedstrijd(int id)
@@ -100,8 +112,10 @@ namespace ApplicationChallengeAPI.Controllers
             {
                 return NotFound();
             }
+            var matchContext = await _context.MatchContexten.FindAsync(wedstrijd.MatchContextID);
 
             _context.Wedstrijden.Remove(wedstrijd);
+            _context.MatchContexten.Remove(matchContext);
             await _context.SaveChangesAsync();
 
             return wedstrijd;
