@@ -45,6 +45,7 @@ namespace ApplicationChallengeAPI.Services
                     new Claim("Naam", user.Naam),
                     new Claim("IsAdmin", user.IsAdmin.ToString()),
                     new Claim("IsKapitein", user.IsKapitein.ToString()),
+                    new Claim("PloegID", user.PloegID.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
