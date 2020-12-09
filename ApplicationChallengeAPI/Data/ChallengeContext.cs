@@ -23,7 +23,7 @@ namespace ApplicationChallengeAPI.Data
         public DbSet<Competitie> Competities { get; set; }
         public DbSet<Tournooi> Tournooien { get; set; }
         public DbSet<MatchContext> MatchContexten { get; set; }
-
+        public DbSet<Challenge> Challenges { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
