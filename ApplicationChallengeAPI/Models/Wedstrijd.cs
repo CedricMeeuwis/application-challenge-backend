@@ -30,7 +30,12 @@ namespace ApplicationChallengeAPI.Models
         public int? Team2User2ID { get; set; }
         public User Team2User2 { get; set; }
 
-        public int TafelID { get; set; }
+        //Context
+        public int MatchContextID { get; set; }
+        public MatchContext MatchContext { get; set; }
+
+        //Tafels
+        public int? TafelID { get; set; }
         public Tafel Tafel { get; set; }
     }
 }

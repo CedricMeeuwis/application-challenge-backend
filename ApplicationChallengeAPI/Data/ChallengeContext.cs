@@ -34,6 +34,15 @@ namespace ApplicationChallengeAPI.Data
             modelBuilder.Entity<Competitie>().ToTable("Competitie");
             modelBuilder.Entity<Tournooi>().ToTable("Tournooi");
             modelBuilder.Entity<MatchContext>().ToTable("MatchContext");
+
+            modelBuilder.Entity<MatchContext>()
+                .HasOne(w => w.Wedstrijd)
+                .WithOne(m => m.MatchContext)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Wedstrijd>()
+                .HasOne(w => w.MatchContext)
+                .WithOne(m => m.Wedstrijd)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

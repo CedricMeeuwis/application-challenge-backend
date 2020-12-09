@@ -25,13 +25,13 @@ namespace ApplicationChallengeAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MatchContext>>> GetMatchContexten()
         {
-            return await _context.MatchContexten.Include(w => w.Wedstrijd).ToListAsync();
+            return await _context.MatchContexten.ToListAsync();
         }
         // GET: api/MatchContext/5
         [HttpGet("{id}")]
         public async Task<ActionResult<MatchContext>> GetMatchContext(int id)
         {
-            var ploeg = await _context.MatchContexten.Include(w => w.Wedstrijd).SingleOrDefaultAsync(i => i.MatchContextID == id);
+            var ploeg = await _context.MatchContexten.SingleOrDefaultAsync(i => i.MatchContextID == id);
 
             if (ploeg == null)
             {
