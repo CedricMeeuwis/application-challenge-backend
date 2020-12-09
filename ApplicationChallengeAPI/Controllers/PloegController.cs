@@ -85,6 +85,21 @@ namespace ApplicationChallengeAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Ploeg>> DeletePloeg(int id)
         {
+            var users = await _context.Users.Where(x => x.PloegID == id).ToListAsync();
+
+            foreach (User user in users)
+            {
+                if (user.IsKapitein)
+                {
+                    user.IsKapitein = false;
+                }
+
+                user.PloegID = null;
+                _context.Users.Update(user);
+            }
+
+            await _context.SaveChangesAsync();
+
             var ploeg = await _context.Ploegen.FindAsync(id);
             if (ploeg == null)
             {
