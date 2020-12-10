@@ -14,9 +14,9 @@ namespace ApplicationChallengeAPI.Controllers
     [ApiController]
     public class TournooiController : ControllerBase
     {
-        private readonly ChallengeContext _context;
+        private readonly TafeltennisContext _context;
 
-        public TournooiController(ChallengeContext context)
+        public TournooiController(TafeltennisContext context)
         {
             _context = context;
         }

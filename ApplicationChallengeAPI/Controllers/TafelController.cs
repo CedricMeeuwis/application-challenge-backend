@@ -14,9 +14,9 @@ namespace ApplicationChallengeAPI.Controllers
     [ApiController]
     public class TafelController : ControllerBase
     {
-        private readonly ChallengeContext _context;
+        private readonly TafeltennisContext _context;
 
-        public TafelController(ChallengeContext context)
+        public TafelController(TafeltennisContext context)
         {
             _context = context;
         }

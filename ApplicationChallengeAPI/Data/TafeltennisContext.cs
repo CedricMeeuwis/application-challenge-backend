@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace ApplicationChallengeAPI.Data
 {
-    public class ChallengeContext : DbContext
+    public class TafeltennisContext : DbContext
     {
-        public ChallengeContext(DbContextOptions<ChallengeContext> options)
+        public TafeltennisContext(DbContextOptions<TafeltennisContext> options)
             : base(options)
         {
         }

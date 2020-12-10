@@ -8,7 +8,7 @@ namespace ApplicationChallengeAPI.Models
 {
     public class DBInitializer
     {
-        public static void Initialize(ChallengeContext context)
+        public static void Initialize(TafeltennisContext context)
         {
             context.Database.EnsureCreated();
 
@@ -50,6 +50,9 @@ namespace ApplicationChallengeAPI.Models
                 new Tafel { Naam = "Tafel jstack", Bedrijfsnaam = "jstack", Adres = "Veldkant 33b, Kontich", ContactTelefoon = "04958536", ContactNaam = "Erik", ContactEmail = "ee@test.be" },
                 new Tafel { Naam = "Tafel TM", Bedrijfsnaam = "Thomas more", Adres = "Kleinhoefstraat 4, Geel", ContactTelefoon = "04856921", ContactNaam = "David", ContactEmail = "aa@test.be" }
             );
+            context.Tournooien.AddRange(
+                new Tournooi { Naam = "Jaarlijks Kampioenschap" }
+            );
             context.MatchContexten.AddRange(
                 new MatchContext { },
                 new MatchContext { TournooiID = 1, TournooiNiveau = 1, TournooiRangschikking = 5 }
@@ -60,9 +63,6 @@ namespace ApplicationChallengeAPI.Models
                 new Wedstrijd { Akkoord = true, Bezig = false, TafelID = 2, Team1Score = 7, Team2Score = 10, Team1User1ID = 1, Team1User2ID = 5, Team2User1ID = 2, Team2User2ID = 6, MatchContextID = 2 }
 
             );
-            context.Tournooien.AddRange(
-                new Tournooi { Naam = "Jaarlijks Kampioenschap" }
-                );
             context.SaveChanges();
 
         }

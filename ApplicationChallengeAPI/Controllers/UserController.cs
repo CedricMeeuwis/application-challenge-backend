@@ -19,9 +19,9 @@ namespace ApplicationChallengeAPI.Controllers
     public class UserController : ControllerBase
     {
         private IUserService _userService;
-        private readonly ChallengeContext _context;
+        private readonly TafeltennisContext _context;
 
-        public UserController(IUserService userService, ChallengeContext context)
+        public UserController(IUserService userService, TafeltennisContext context)
         {
             _userService = userService;
             _context = context;
