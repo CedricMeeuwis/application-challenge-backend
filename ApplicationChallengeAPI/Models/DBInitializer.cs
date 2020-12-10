@@ -17,7 +17,7 @@ namespace ApplicationChallengeAPI.Models
             {
                 return;   // DB has been seeded
             }
-            //To be done
+
             context.Ploegen.AddRange(
               new Ploeg { Naam = "Jstack United", Bedrijfsnaam = "jstack", Locatie = "Kontich" },
               new Ploeg { Naam = "Grass City", Bedrijfsnaam = "Grasshoppers", Locatie = "Kontich" },
@@ -50,13 +50,17 @@ namespace ApplicationChallengeAPI.Models
                 new Tafel { Naam = "Tafel jstack", Bedrijfsnaam = "jstack", Adres = "Veldkant 33b, Kontich", ContactTelefoon = "04958536", ContactNaam = "Erik", ContactEmail = "ee@test.be" },
                 new Tafel { Naam = "Tafel TM", Bedrijfsnaam = "Thomas more", Adres = "Kleinhoefstraat 4, Geel", ContactTelefoon = "04856921", ContactNaam = "David", ContactEmail = "aa@test.be" }
             );
+
             context.Tournooien.AddRange(
                 new Tournooi { Naam = "Jaarlijks Kampioenschap" }
             );
+            context.SaveChanges();
+
             context.MatchContexten.AddRange(
                 new MatchContext { },
                 new MatchContext { TournooiID = 1, TournooiNiveau = 1, TournooiRangschikking = 5 }
             );
+            context.SaveChanges();
 
             context.Wedstrijden.AddRange(
                 new Wedstrijd { Akkoord= true, Bezig = false, TafelID=1, Team1Score=10, Team2Score=6, Team1User1ID=1, Team1User2ID=5, Team2User1ID=2, Team2User2ID=6, MatchContextID= 1},
@@ -64,7 +68,6 @@ namespace ApplicationChallengeAPI.Models
 
             );
             context.SaveChanges();
-
         }
     }
 }
