@@ -32,7 +32,7 @@ namespace ApplicationChallengeAPI.Controllers
                 .Include(k => k.Team2User2)
                 .ToListAsync();
         }
-        // GET: api/Wedstrijd
+        // GET: api/Tournooi/Wedstrijd
         [HttpGet("Tournooi/{id}")]
         public async Task<ActionResult<IEnumerable<Wedstrijd>>> GetWedstrijdenOfTournooi(int id)
         {
@@ -44,6 +44,26 @@ namespace ApplicationChallengeAPI.Controllers
                 .Include(m => m.MatchContext)
                 .ToListAsync();
         }
+
+        // GET: api/user/BonS/Wedstrijd
+        [HttpGet("User/BonS/{id}")]
+        public async Task<ActionResult<IEnumerable<Wedstrijd>>> GetWedstrijdenOfUserBusyOrNotStarted(int id)
+        {
+            return await _context.Wedstrijden.Where(w => (w.Bezig == true || w.Team1Score == 0 && w.Team2Score == 0) && //check of match bezig is of nog niet gestart is
+            (w.Team1User1ID == id || w.Team1User2ID == id || w.Team2User1ID == id || w.Team2User2ID == id))//check is user is in match
+                .OrderBy(w => w.MatchContext.TournooiRangschikking)
+                .Include(k => k.Team1User1)
+                .Include(k => k.Team1User2)
+                .Include(k => k.Team2User1)
+                .Include(k => k.Team2User2)
+                .Include(m => m.MatchContext)
+                .Include(t => t.MatchContext.Tournooi)
+                .Include(w => w.Team1User1.Ploeg)
+                .Include(w => w.Team2User1.Ploeg)
+                .Include(w => w.Tafel)
+                .ToListAsync();
+        }
+
         // GET: api/Wedstrijd/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Wedstrijd>> GetWedstrijd(int id)
@@ -53,6 +73,11 @@ namespace ApplicationChallengeAPI.Controllers
                 .Include(k => k.Team1User2)
                 .Include(k => k.Team2User1)
                 .Include(k => k.Team2User2)
+                .Include(m => m.MatchContext)
+                .Include(t => t.MatchContext.Tournooi)
+                .Include(w => w.Team1User1.Ploeg)
+                .Include(w => w.Team2User1.Ploeg)
+                .Include(w => w.Tafel)
                 .SingleOrDefaultAsync(i => i.WedstrijdID == id);
 
             if (wedstrijd == null)
