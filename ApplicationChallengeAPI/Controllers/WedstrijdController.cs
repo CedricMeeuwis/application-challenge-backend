@@ -44,6 +44,22 @@ namespace ApplicationChallengeAPI.Controllers
                 .Include(m => m.MatchContext)
                 .ToListAsync();
         }
+        // GET: api/Wedstrijd
+        [HttpGet("Betwisting")]
+        public async Task<ActionResult<IEnumerable<Wedstrijd>>> GetBetwistingen()
+        {
+            return await _context.Wedstrijden
+                .Where(w => w.Bezig == false)
+                .Where(w => w.Akkoord == false)
+                .Where(w => w.Team1Score == 10 || w.Team2Score == 10)
+                .Include(k => k.Team1User1)
+                .Include(k => k.Team1User2)
+                .Include(k => k.Team2User1)
+                .Include(k => k.Team2User2)
+                .Include(m => m.MatchContext).ThenInclude(t => t.Tournooi)
+                .Include(m => m.MatchContext).ThenInclude(c => c.Competitie)
+                .ToListAsync();
+        }
         // GET: api/Wedstrijd/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Wedstrijd>> GetWedstrijd(int id)
