@@ -15,9 +15,9 @@ namespace ApplicationChallengeAPI.Controllers
     [ApiController]
     public class PloegController : ControllerBase
     {
-        private readonly ChallengeContext _context;
+        private readonly TafeltennisContext _context;
 
-        public PloegController(ChallengeContext context)
+        public PloegController(TafeltennisContext context)
         {
             _context = context;
         }
@@ -122,6 +122,21 @@ namespace ApplicationChallengeAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Ploeg>> DeletePloeg(int id)
         {
+            var users = await _context.Users.Where(x => x.PloegID == id).ToListAsync();
+
+            foreach (User user in users)
+            {
+                if (user.IsKapitein)
+                {
+                    user.IsKapitein = false;
+                }
+
+                user.PloegID = null;
+                _context.Users.Update(user);
+            }
+
+            await _context.SaveChangesAsync();
+
             var ploeg = await _context.Ploegen.FindAsync(id);
             if (ploeg == null)
             {

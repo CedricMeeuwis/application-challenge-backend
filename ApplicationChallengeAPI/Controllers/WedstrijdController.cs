@@ -14,9 +14,9 @@ namespace ApplicationChallengeAPI.Controllers
     [ApiController]
     public class WedstrijdController : ControllerBase
     {
-        private readonly ChallengeContext _context;
+        private readonly TafeltennisContext _context;
 
-        public WedstrijdController(ChallengeContext context)
+        public WedstrijdController(TafeltennisContext context)
         {
             _context = context;
         }
@@ -30,6 +30,34 @@ namespace ApplicationChallengeAPI.Controllers
                 .Include(k => k.Team1User2)
                 .Include(k => k.Team2User1)
                 .Include(k => k.Team2User2)
+                .ToListAsync();
+        }
+        // GET: api/Wedstrijd
+        [HttpGet("Tournooi/{id}")]
+        public async Task<ActionResult<IEnumerable<Wedstrijd>>> GetWedstrijdenOfTournooi(int id)
+        {
+            return await _context.Wedstrijden.Where(w => w.MatchContext.TournooiID == id).OrderBy(w => w.MatchContext.TournooiRangschikking)
+                .Include(k => k.Team1User1)
+                .Include(k => k.Team1User2)
+                .Include(k => k.Team2User1)
+                .Include(k => k.Team2User2)
+                .Include(m => m.MatchContext)
+                .ToListAsync();
+        }
+        // GET: api/Wedstrijd
+        [HttpGet("Betwisting")]
+        public async Task<ActionResult<IEnumerable<Wedstrijd>>> GetBetwistingen()
+        {
+            return await _context.Wedstrijden
+                .Where(w => w.Bezig == false)
+                .Where(w => w.Akkoord == false)
+                .Where(w => w.Team1Score == 10 || w.Team2Score == 10)
+                .Include(k => k.Team1User1)
+                .Include(k => k.Team1User2)
+                .Include(k => k.Team2User1)
+                .Include(k => k.Team2User2)
+                .Include(m => m.MatchContext).ThenInclude(t => t.Tournooi)
+                .Include(m => m.MatchContext).ThenInclude(c => c.Competitie)
                 .ToListAsync();
         }
         // GET: api/Wedstrijd/5
@@ -100,11 +128,78 @@ namespace ApplicationChallengeAPI.Controllers
             {
                 return NotFound();
             }
+            var matchContext = await _context.MatchContexten.FindAsync(wedstrijd.MatchContextID);
 
             _context.Wedstrijden.Remove(wedstrijd);
+            _context.MatchContexten.Remove(matchContext);
             await _context.SaveChangesAsync();
 
             return wedstrijd;
+        }
+
+        [HttpGet("User/{id}")]
+        public async Task<ActionResult<IEnumerable<Wedstrijd>>> GetWedstrijdenUser(int id)
+        {
+            return await _context.Wedstrijden
+                .Where(w => (w.Team1User1ID == id ||
+                            w.Team1User2ID == id ||
+                            w.Team2User1ID == id ||
+                            w.Team2User2ID == id) &&
+                            w.Bezig == false &&
+                            w.Akkoord == true &&
+                           (w.Team1Score != 0 && w.Team2Score != 0)
+                )
+                .Select( w =>
+                    new Wedstrijd
+                    {
+                        WedstrijdID = w.WedstrijdID,
+                        MatchContext = new MatchContext
+                        {
+                            MatchContextID = w.MatchContext.MatchContextID,
+                            TournooiID = w.MatchContext.TournooiID,
+                            Tournooi = w.MatchContext.Tournooi,
+                            TournooiNiveau = w.MatchContext.TournooiNiveau,
+                            TournooiRangschikking = w.MatchContext.TournooiRangschikking,
+                            CompetitieID = w.MatchContext.CompetitieID,
+                            Competitie = w.MatchContext.Competitie
+                        },
+                        MatchContextID = w.MatchContextID,
+                        Tafel = w.Tafel,
+                        TafelID = w.TafelID,
+                        Team1User1ID = w.Team1User1ID,
+                        Team1User1 = new User
+                        {
+                            UserID = w.Team1User1.UserID,
+                            Naam = w.Team1User1.Naam,
+                            PloegID = w.Team1User1.PloegID,
+                            Ploeg = w.Team1User1.Ploeg
+                        },
+                        Team1User2ID = w.Team1User2ID,
+                        Team1User2 = new User
+                        {
+                            UserID = w.Team1User2.UserID,
+                            Naam = w.Team1User2.Naam
+                        },
+                        Team2User1ID = w.Team2User1ID,
+                        Team2User1 = new User
+                        {
+                            UserID = w.Team2User1.UserID,
+                            Naam = w.Team2User1.Naam,
+                            PloegID = w.Team2User1.PloegID,
+                            Ploeg = w.Team2User1.Ploeg
+                        },
+                        Team2User2ID = w.Team2User2ID,
+                        Team2User2 = new User
+                        {
+                            UserID = w.Team2User2.UserID,
+                            Naam = w.Team2User2.Naam
+                        },
+                        Team1Score = w.Team1Score,
+                        Team2Score = w.Team2Score
+                    }
+                )
+                .OrderByDescending(w => w.WedstrijdID)
+                .ToListAsync();
         }
 
         private bool WedstrijdExists(int id)

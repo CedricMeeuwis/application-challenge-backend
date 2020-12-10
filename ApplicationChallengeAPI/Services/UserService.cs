@@ -17,9 +17,9 @@ namespace ApplicationChallengeAPI.Services
     public class UserService : IUserService
     {
         private readonly AppSettings _appSettings;
-        private readonly ChallengeContext _newsContext;
+        private readonly TafeltennisContext _newsContext;
 
-        public UserService(IOptions<AppSettings> appSettings, ChallengeContext newsContext)
+        public UserService(IOptions<AppSettings> appSettings, TafeltennisContext newsContext)
         {
             _appSettings = appSettings.Value;
             _newsContext = newsContext;

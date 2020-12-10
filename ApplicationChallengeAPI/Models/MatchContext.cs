@@ -14,12 +14,13 @@ namespace ApplicationChallengeAPI.Models
         public int? TournooiRangschikking { get; set; }
 
         //Relations
-        public int WedstrijdID { get; set; }
-        public Wedstrijd Wedstrijd { get; set; }
         public int? TournooiID { get; set; }
         public Tournooi Tournooi { get; set; }
         public int? CompetitieID { get; set; }
         public Competitie Competitie { get; set; }
+
+        [JsonIgnore]
+        public Wedstrijd Wedstrijd { get; set; }
 
     }
 }

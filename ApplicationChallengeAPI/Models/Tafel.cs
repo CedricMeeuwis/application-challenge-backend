@@ -18,5 +18,8 @@ namespace ApplicationChallengeAPI.Models
         public string ContactTelefoon { get; set; }
         public string ContactNaam { get; set; }
         public string ContactEmail { get; set; }
+
+        [JsonIgnore]
+        public ICollection<Wedstrijd> Wedstrijden { get; set; }
     }
 }
