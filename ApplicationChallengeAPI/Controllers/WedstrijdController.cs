@@ -122,27 +122,66 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         [HttpGet("User/{id}")]
-        public async Task<ActionResult<IEnumerable<Wedstrijd>>> GetMatchContextenUser(int id)
+        public async Task<ActionResult<IEnumerable<Wedstrijd>>> GetWedstrijdenUser(int id)
         {
             return await _context.Wedstrijden
-                .Include(u => u.Team1User1)
-                    .ThenInclude(i => i.Ploeg)
-                .Include(u => u.Team1User2)
-                .Include(u => u.Team2User1)
-                    .ThenInclude(i => i.Ploeg)
-                .Include(u => u.Team2User2)
-                .Include(t => t.Tafel)
-                .Include(m => m.MatchContext)
-                    .ThenInclude(t => t.Tournooi)
-                .Include(m => m.MatchContext)
-                .Where(m => (m.Team1User1ID == id ||
-                            m.Team1User2ID == id ||
-                            m.Team2User1ID == id ||
-                            m.Team2User2ID == id) &&
-                            m.Bezig == false &&
-                            m.Akkoord == true &&
-                            (m.Team1Score != 0 && m.Team2Score != 0)
-                            )
+                .Where(w => (w.Team1User1ID == id ||
+                            w.Team1User2ID == id ||
+                            w.Team2User1ID == id ||
+                            w.Team2User2ID == id) &&
+                            w.Bezig == false &&
+                            w.Akkoord == true &&
+                           (w.Team1Score != 0 && w.Team2Score != 0)
+                )
+                .Select( w =>
+                    new Wedstrijd
+                    {
+                        WedstrijdID = w.WedstrijdID,
+                        MatchContext = new MatchContext
+                        {
+                            MatchContextID = w.MatchContext.MatchContextID,
+                            TournooiID = w.MatchContext.TournooiID,
+                            Tournooi = w.MatchContext.Tournooi,
+                            TournooiNiveau = w.MatchContext.TournooiNiveau,
+                            TournooiRangschikking = w.MatchContext.TournooiRangschikking,
+                            CompetitieID = w.MatchContext.CompetitieID,
+                            Competitie = w.MatchContext.Competitie
+                        },
+                        MatchContextID = w.MatchContextID,
+                        Tafel = w.Tafel,
+                        TafelID = w.TafelID,
+                        Team1User1ID = w.Team1User1ID,
+                        Team1User1 = new User
+                        {
+                            UserID = w.Team1User1.UserID,
+                            Naam = w.Team1User1.Naam,
+                            PloegID = w.Team1User1.PloegID,
+                            Ploeg = w.Team1User1.Ploeg
+                        },
+                        Team1User2ID = w.Team1User2ID,
+                        Team1User2 = new User
+                        {
+                            UserID = w.Team1User2.UserID,
+                            Naam = w.Team1User2.Naam
+                        },
+                        Team2User1ID = w.Team2User1ID,
+                        Team2User1 = new User
+                        {
+                            UserID = w.Team2User1.UserID,
+                            Naam = w.Team2User1.Naam,
+                            PloegID = w.Team2User1.PloegID,
+                            Ploeg = w.Team2User1.Ploeg
+                        },
+                        Team2User2ID = w.Team2User2ID,
+                        Team2User2 = new User
+                        {
+                            UserID = w.Team2User2.UserID,
+                            Naam = w.Team2User2.Naam
+                        },
+                        Team1Score = w.Team1Score,
+                        Team2Score = w.Team2Score
+                    }
+                )
                 .OrderByDescending(w => w.WedstrijdID)
                 .ToListAsync();
         }
