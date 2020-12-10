@@ -51,7 +51,18 @@ namespace ApplicationChallengeAPI.Controllers
         {
             return await _context.Wedstrijden.Where(w => (w.Bezig == true || w.Team1Score == 0 && w.Team2Score == 0) && //check of match bezig is of nog niet gestart is
             (w.Team1User1ID == id || w.Team1User2ID == id || w.Team2User1ID == id || w.Team2User2ID == id))//check is user is in match
+                 .Include(k => k.Team1User1)
+                .Include(k => k.Team1User2)
+                .Include(k => k.Team2User1)
+                .Include(k => k.Team2User2)
+                .Include(m => m.MatchContext).ThenInclude(t => t.Tournooi)
+                .Include(m => m.MatchContext).ThenInclude(c => c.Competitie)
+                .Include(w => w.Team1User1.Ploeg)
+                .Include(w => w.Team2User1.Ploeg)
+                .Include(w => w.Tafel)
                 .OrderBy(w => w.MatchContext.TournooiRangschikking)
+                .ToListAsync();
+        }
                 
         // GET: api/Wedstrijd
         [HttpGet("Betwisting")]
