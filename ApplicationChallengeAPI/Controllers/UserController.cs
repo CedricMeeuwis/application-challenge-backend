@@ -27,11 +27,11 @@ namespace ApplicationChallengeAPI.Controllers
             _context = context;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            var email = User.Claims.FirstOrDefault(c => c.Type == "Email").Value;
+            //var email = User.Claims.FirstOrDefault(c => c.Type == "Email").Value;
 
             //alle users zonder passwoorden
             return await _context.Users.Select(u => new User

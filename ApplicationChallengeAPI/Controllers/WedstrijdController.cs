@@ -137,6 +137,32 @@ namespace ApplicationChallengeAPI.Controllers
             return wedstrijd;
         }
 
+        [HttpGet("User/{id}")]
+        public async Task<ActionResult<IEnumerable<Wedstrijd>>> GetMatchContextenUser(int id)
+        {
+            return await _context.Wedstrijden
+                .Include(u => u.Team1User1)
+                    .ThenInclude(i => i.Ploeg)
+                .Include(u => u.Team1User2)
+                .Include(u => u.Team2User1)
+                    .ThenInclude(i => i.Ploeg)
+                .Include(u => u.Team2User2)
+                .Include(t => t.Tafel)
+                .Include(m => m.MatchContext)
+                    .ThenInclude(t => t.Tournooi)
+                .Include(m => m.MatchContext)
+                .Where(m => (m.Team1User1ID == id ||
+                            m.Team1User2ID == id ||
+                            m.Team2User1ID == id ||
+                            m.Team2User2ID == id) &&
+                            m.Bezig == false &&
+                            m.Akkoord == true &&
+                            (m.Team1Score != 0 && m.Team2Score != 0)
+                            )
+                .OrderByDescending(w => w.WedstrijdID)
+                .ToListAsync();
+        }
+
         private bool WedstrijdExists(int id)
         {
             return _context.Wedstrijden.Any(e => e.WedstrijdID == id);
