@@ -52,21 +52,21 @@ namespace ApplicationChallengeAPI.Models
             );
             context.SaveChanges();
 
-            context.Wedstrijden.AddRange(
-                new Wedstrijd { Akkoord= true, Bezig = false, TafelID=1, Team1Score=10, Team2Score=6, Team1User1ID=1, Team1User2ID=5, Team2User1ID=2, Team2User2ID=6},
-                new Wedstrijd { Akkoord = true, Bezig = false, TafelID = 2, Team1Score = 7, Team2Score = 10, Team1User1ID = 1, Team1User2ID = 5, Team2User1ID = 2, Team2User2ID = 6 }
-
-            );
-            context.SaveChanges();
-
             context.Tournooien.AddRange(
-                new Tournooi { Naam= "Jaarlijks Kampioenschap"}
+                new Tournooi { Naam = "Jaarlijks Kampioenschap" }
                 );
             context.SaveChanges();
 
             context.MatchContexten.AddRange(
-                new MatchContext { WedstrijdID = 1 },  
-                new MatchContext { WedstrijdID = 2, TournooiID = 1, TournooiNiveau = 1, TournooiRangschikking=5}
+                new MatchContext {  },
+                new MatchContext { TournooiID = 1, TournooiNiveau = 1, TournooiRangschikking = 5 }
+            );
+            context.SaveChanges();
+
+            context.Wedstrijden.AddRange(
+                new Wedstrijd { Akkoord= true, Bezig = false, TafelID=1, Team1Score=10, Team2Score=6, Team1User1ID=1, Team1User2ID=5, Team2User1ID=2, Team2User2ID=6, MatchContextID=1},
+                new Wedstrijd { Akkoord = true, Bezig = false, TafelID = 2, Team1Score = 7, Team2Score = 10, Team1User1ID = 1, Team1User2ID = 5, Team2User1ID = 2, Team2User2ID = 6, MatchContextID=2 }
+
             );
             context.SaveChanges();
 
