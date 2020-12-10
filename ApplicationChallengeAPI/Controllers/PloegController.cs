@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ApplicationChallengeAPI.Data;
 using ApplicationChallengeAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ApplicationChallengeAPI.Controllers
 {
@@ -27,6 +28,42 @@ namespace ApplicationChallengeAPI.Controllers
         {
             return await _context.Ploegen.Include(u => u.Leden).ToListAsync();
         }
+
+        // GET: api/Ploeg/AnderePloegen
+        [Authorize]
+        [HttpGet("AnderePloegen")]
+        public async Task<ActionResult<IEnumerable<Ploeg>>> GetAnderePloegen()
+        {
+            if (string.IsNullOrWhiteSpace(User.Claims.FirstOrDefault(c => c.Type == "PloegID").Value))
+            {
+                return await _context.Ploegen.ToListAsync();
+            }
+            int ploegID = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "PloegID").Value);
+
+            return await _context.Ploegen.Where(p => p.PloegID != ploegID).ToListAsync();
+        }
+
+        // GET: api/Ploeg/MijnPloeg
+        [Authorize]
+        [HttpGet("MijnPloeg")]
+        public async Task<ActionResult<Ploeg>> GetMijnPloeg()
+        {
+            if(string.IsNullOrWhiteSpace(User.Claims.FirstOrDefault(c => c.Type == "PloegID").Value))
+            {
+                return NotFound("Je bent niet bij een ploeg aangesloten");
+            }
+            int ploegID = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "PloegID").Value);
+
+            var ploeg = await _context.Ploegen.SingleOrDefaultAsync(i => i.PloegID == ploegID);
+
+            if (ploeg == null)
+            {
+                return NotFound();
+            }
+
+            return ploeg;
+        }
+
         // GET: api/Ploeg/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Ploeg>> GetPloeg(int id)
