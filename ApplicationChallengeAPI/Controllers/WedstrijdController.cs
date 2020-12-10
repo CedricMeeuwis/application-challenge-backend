@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ApplicationChallengeAPI.Data;
 using ApplicationChallengeAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ApplicationChallengeAPI.Controllers
 {
@@ -32,6 +33,7 @@ namespace ApplicationChallengeAPI.Controllers
                 .Include(k => k.Team2User2)
                 .ToListAsync();
         }
+
         // GET: api/Wedstrijd
         [HttpGet("Tournooi/{id}")]
         public async Task<ActionResult<IEnumerable<Wedstrijd>>> GetWedstrijdenOfTournooi(int id)
@@ -44,6 +46,7 @@ namespace ApplicationChallengeAPI.Controllers
                 .Include(m => m.MatchContext)
                 .ToListAsync();
         }
+
         // GET: api/Wedstrijd
         [HttpGet("Betwisting")]
         public async Task<ActionResult<IEnumerable<Wedstrijd>>> GetBetwistingen()
@@ -77,6 +80,73 @@ namespace ApplicationChallengeAPI.Controllers
             }
 
             return wedstrijd;
+        }
+
+        // GET: api/Wedstrijd/PloegStats/5
+        [HttpGet("PloegStats/{id}")]
+        public async Task<ActionResult<Object>> GetPloegStats(int id)
+        {
+            int ploegWins = await _context.Wedstrijden
+                .Where(c =>
+                (c.Team1User1.PloegID == id && c.Team1Score == 10) ||
+                (c.Team2User1.PloegID == id && c.Team2Score == 10))
+                .CountAsync();
+
+            int ploegLosses = await _context.Wedstrijden
+                .Where(c =>
+                (c.Team1User1.PloegID == id && c.Team2Score == 10) ||
+                (c.Team2User1.PloegID == id && c.Team1Score == 10))
+                .CountAsync();
+            Object stats = new { ploegWins, ploegLosses };
+
+            return stats;
+        }
+
+        // GET: api/Wedstrijd/MijnStats
+        [Authorize]
+        [HttpGet("MijnStats")]
+        public async Task<ActionResult<Object>> GetMijnStats()
+        {
+            //Check of user wel een ploeg heeft
+            if (string.IsNullOrWhiteSpace(User.Claims.FirstOrDefault(c => c.Type == "PloegID").Value))
+            {
+                return NotFound("Je zit niet in een ploeg");
+            }
+            int ploegID = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "PloegID").Value);
+            int userID = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "UserID").Value);
+
+            int ploegWins = await _context.Wedstrijden
+                .Where(c =>
+                (c.Team1User1.PloegID == ploegID && c.Team1Score == 10) ||
+                (c.Team2User1.PloegID == ploegID && c.Team2Score == 10))
+                .CountAsync();
+
+            int ploegLosses = await _context.Wedstrijden
+                .Where(c => 
+                (c.Team1User1.PloegID == ploegID && c.Team2Score == 10) ||
+                (c.Team2User1.PloegID == ploegID && c.Team1Score == 10))
+                .CountAsync();
+
+            int mijnWins = await _context.Wedstrijden
+                .Where(c => 
+                (c.Team1User1.UserID == userID && c.Team1Score == 10) ||
+                (c.Team1User2.UserID == userID && c.Team1Score == 10) ||
+                (c.Team2User1.UserID == userID && c.Team2Score == 10) ||
+                (c.Team2User2.UserID == userID && c.Team2Score == 10))
+                .CountAsync();
+
+            int mijnLosses = await _context.Wedstrijden
+                .Where(c =>
+                (c.Team1User1.UserID == userID && c.Team2Score == 10) ||
+                (c.Team1User2.UserID == userID && c.Team2Score == 10) ||
+                (c.Team2User1.UserID == userID && c.Team1Score == 10) ||
+                (c.Team2User2.UserID == userID && c.Team1Score == 10))
+                .CountAsync();
+
+
+            Object stats = new { ploegWins, ploegLosses, mijnWins, mijnLosses };
+
+            return stats;
         }
 
         // PUT: api/Wedstrijd/5
