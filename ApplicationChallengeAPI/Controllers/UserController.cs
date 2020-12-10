@@ -47,12 +47,37 @@ namespace ApplicationChallengeAPI.Controllers
                 Ploeg = u.Ploeg
             }).ToListAsync();
         }
+
+        // GET: api/User/MijnPloeg
+        [Authorize]
+        [HttpGet("MijnPloeg")]
+        public async Task<ActionResult<IEnumerable<User>>> GetUsersFromUserPloeg()
+        {
+            if(string.IsNullOrWhiteSpace(User.Claims.FirstOrDefault(c => c.Type == "PloegID").Value))
+            {
+                return NotFound();
+            }
+            int ploegID = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "PloegID").Value);
+
+            var users = await _context.Users.Where(u => u.PloegID == ploegID).Select(u => new User
+            {
+                UserID = u.UserID,
+                Naam = u.Naam,
+                Email = u.Email,
+                IsKapitein = u.IsKapitein,
+                PloegID = u.PloegID
+            }).ToListAsync();
+
+            return users;
+        }
+
         // GET: api/User/Ploeg/1
         [HttpGet("Ploeg/{id}")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsersByPloeg(int id)
         {
             return await _context.Users.Where(x => x.PloegID == id).ToListAsync();
         }
+
         // GET: api/User/1
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
@@ -66,6 +91,7 @@ namespace ApplicationChallengeAPI.Controllers
 
             return user;
         }
+
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
