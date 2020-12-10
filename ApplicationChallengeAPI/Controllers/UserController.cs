@@ -19,19 +19,19 @@ namespace ApplicationChallengeAPI.Controllers
     public class UserController : ControllerBase
     {
         private IUserService _userService;
-        private readonly ChallengeContext _context;
+        private readonly TafeltennisContext _context;
 
-        public UserController(IUserService userService, ChallengeContext context)
+        public UserController(IUserService userService, TafeltennisContext context)
         {
             _userService = userService;
             _context = context;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            var email = User.Claims.FirstOrDefault(c => c.Type == "Email").Value;
+            //var email = User.Claims.FirstOrDefault(c => c.Type == "Email").Value;
 
             //alle users zonder passwoorden
             return await _context.Users.Select(u => new User
@@ -65,13 +65,13 @@ namespace ApplicationChallengeAPI.Controllers
             }).Where(u => u.PloegID.HasValue == false).ToListAsync();
         }
 
-
         // GET: api/User/Ploeg/1
         [HttpGet("Ploeg/{id}")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsersByPloeg(int id)
         {
             return await _context.Users.Where(x => x.PloegID == id).ToListAsync();
         }
+
         // GET: api/User/Ploeg
         [HttpGet("Ploeg")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsersHasPloeg()
@@ -89,6 +89,30 @@ namespace ApplicationChallengeAPI.Controllers
                 Ploeg = u.Ploeg
             }).ToListAsync();
         }
+
+        // GET: api/User/MijnPloeg
+        [Authorize]
+        [HttpGet("MijnPloeg")]
+        public async Task<ActionResult<IEnumerable<User>>> GetUsersFromPloeg()
+        {
+            if (string.IsNullOrWhiteSpace(User.Claims.FirstOrDefault(c => c.Type == "PloegID").Value))
+            {
+                return NotFound();
+            }
+            int ploegID = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "PloegID").Value);
+
+            var users = await _context.Users.Where(u => u.PloegID == ploegID).Select(u => new User
+            {
+                UserID = u.UserID,
+                Naam = u.Naam,
+                Email = u.Email,
+                IsKapitein = u.IsKapitein,
+                PloegID = u.PloegID
+            }).ToListAsync();
+
+            return users;
+        }
+
         // GET: api/User/1
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
@@ -102,6 +126,7 @@ namespace ApplicationChallengeAPI.Controllers
 
             return user;
         }
+
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {

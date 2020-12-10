@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace ApplicationChallengeAPI.Data
 {
-    public class ChallengeContext : DbContext
+    public class TafeltennisContext : DbContext
     {
-        public ChallengeContext(DbContextOptions<ChallengeContext> options)
+        public TafeltennisContext(DbContextOptions<TafeltennisContext> options)
             : base(options)
         {
         }
@@ -33,6 +33,8 @@ namespace ApplicationChallengeAPI.Data
             modelBuilder.Entity<Wedstrijd>().ToTable("Wedstrijd");
             modelBuilder.Entity<Competitie>().ToTable("Competitie");
             modelBuilder.Entity<Tournooi>().ToTable("Tournooi");
+            modelBuilder.Entity<Challenge>().ToTable("Challenge");
+
             modelBuilder.Entity<MatchContext>().ToTable("MatchContext");
 
             modelBuilder.Entity<MatchContext>()

@@ -100,13 +100,13 @@ namespace ApplicationChallengeAPI
             services.AddScoped<IUserService, UserService>();
 
 
-            services.AddDbContext<ChallengeContext>(opt =>
+            services.AddDbContext<TafeltennisContext>(opt =>
                 opt.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ChallengeContext context)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, TafeltennisContext context)
         {
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
