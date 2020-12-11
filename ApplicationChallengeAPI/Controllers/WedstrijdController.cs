@@ -245,7 +245,7 @@ namespace ApplicationChallengeAPI.Controllers
                             w.Team2User2ID == id) &&
                             w.Bezig == Bezig.Gespeeld &&
                             w.Akkoord == true &&
-                           (w.Team1Score != 0 && w.Team2Score != 0)
+                           (w.Team1Score != 0 || w.Team2Score != 0)
                 )
                 .Select( w =>
                     new Wedstrijd
