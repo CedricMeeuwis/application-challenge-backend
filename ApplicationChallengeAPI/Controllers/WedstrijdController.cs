@@ -33,7 +33,21 @@ namespace ApplicationChallengeAPI.Controllers
                 .Include(k => k.Team2User2)
                 .ToListAsync();
         }
-        
+
+        // GET: api/Wedstrijd/Competitie/CompetitieId
+        [HttpGet("Competitie/{id}")]
+        public async Task<ActionResult<IEnumerable<Wedstrijd>>> GetWedstrijdenOfCompetitie(int id)
+        {
+            return await _context.Wedstrijden.Where(w => w.MatchContext.CompetitieID == id).OrderBy(w => w.MatchContext.TournooiRangschikking)
+                .Include(k => k.Team1User1)
+                .Include(k => k.Team1User2)
+                .Include(k => k.Team2User1)
+                .Include(k => k.Team2User2)
+                .Include(m => m.MatchContext)
+                .Include(w => w.Tafel)
+                .ToListAsync();
+        }
+
         // GET: api/Tournooi/Wedstrijd
         [HttpGet("Tournooi/{id}")]
         public async Task<ActionResult<IEnumerable<Wedstrijd>>> GetWedstrijdenOfTournooi(int id)
