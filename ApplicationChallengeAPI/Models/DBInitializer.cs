@@ -64,8 +64,8 @@ namespace ApplicationChallengeAPI.Models
             context.SaveChanges();
 
             context.Wedstrijden.AddRange(
-                new Wedstrijd { MatchContextID=1, Akkoord = true, Bezig = false, TafelID = 1, Team1Score = 10, Team2Score = 6, Team1User1ID = 1, Team1User2ID = 5, Team2User1ID = 2, Team2User2ID = 6 },
-                new Wedstrijd { MatchContextID=2, Akkoord = true, Bezig = false, TafelID = 2, Team1Score = 7, Team2Score = 10, Team1User1ID = 1, Team1User2ID = 5, Team2User1ID = 2, Team2User2ID = 6 }
+                new Wedstrijd { MatchContextID=1, Akkoord = true, Bezig = Bezig.Gespeeld, TafelID = 1, Team1Score = 10, Team2Score = 6, Team1User1ID = 1, Team1User2ID = 5, Team2User1ID = 2, Team2User2ID = 6 },
+                new Wedstrijd { MatchContextID=2, Akkoord = true, Bezig = Bezig.Gespeeld, TafelID = 2, Team1Score = 7, Team2Score = 10, Team1User1ID = 1, Team1User2ID = 5, Team2User1ID = 2, Team2User2ID = 6 }
             );
             context.SaveChanges();
         }
