@@ -4,15 +4,17 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
+
 namespace ApplicationChallengeAPI.Models
 {
+    public enum Bezig { NogTeSpelen, Bezig, Gespeeld };
     public class Wedstrijd
     {
         public int WedstrijdID { get; set; }
 
         public int Team1Score { get; set; }
         public int Team2Score { get; set; }
-        public bool Bezig { get; set; }
+        public Bezig Bezig { get; set; }
         public bool Akkoord { get; set; }
         //Relations
 

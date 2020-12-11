@@ -51,7 +51,7 @@ namespace ApplicationChallengeAPI.Controllers
         [HttpGet("User/BonS/{id}")]
         public async Task<ActionResult<IEnumerable<Wedstrijd>>> GetWedstrijdenOfUserBusyOrNotStarted(int id)
         {
-            return await _context.Wedstrijden.Where(w => (w.Bezig == true || w.Team1Score == 0 && w.Team2Score == 0) && //check of match bezig is of nog niet gestart is
+            return await _context.Wedstrijden.Where(w => (w.Bezig == Bezig.Bezig || w.Team1Score == 0 && w.Team2Score == 0) && //check of match bezig is of nog niet gestart is
             (w.Team1User1ID == id || w.Team1User2ID == id || w.Team2User1ID == id || w.Team2User2ID == id))//check is user is in match
                  .Include(k => k.Team1User1)
                 .Include(k => k.Team1User2)
@@ -71,7 +71,7 @@ namespace ApplicationChallengeAPI.Controllers
         public async Task<ActionResult<IEnumerable<Wedstrijd>>> GetBetwistingen()
         {
             return await _context.Wedstrijden
-                .Where(w => w.Bezig == false)
+                .Where(w => w.Bezig == Bezig.Gespeeld)
                 .Where(w => w.Akkoord == false)
                 .Where(w => w.Team1Score == 10 || w.Team2Score == 10)
                 .Include(k => k.Team1User1)
@@ -243,7 +243,7 @@ namespace ApplicationChallengeAPI.Controllers
                             w.Team1User2ID == id ||
                             w.Team2User1ID == id ||
                             w.Team2User2ID == id) &&
-                            w.Bezig == false &&
+                            w.Bezig == Bezig.Gespeeld &&
                             w.Akkoord == true &&
                            (w.Team1Score != 0 && w.Team2Score != 0)
                 )
