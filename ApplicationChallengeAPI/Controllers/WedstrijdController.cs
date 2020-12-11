@@ -221,6 +221,59 @@ namespace ApplicationChallengeAPI.Controllers
             return NoContent();
         }
 
+        // PUT: api/Wedstrijd/Betwist/5
+        [Authorize]
+        [HttpPut("Betwist/{id}")]
+        public async Task<IActionResult> BetwistWedstrijd(int id)
+        {
+            //Check of user wel een ploeg heeft
+            if (string.IsNullOrWhiteSpace(User.Claims.FirstOrDefault(c => c.Type == "PloegID").Value))
+            {
+                return NotFound("Je zit niet in een ploeg");
+            }
+            int ploegID = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "PloegID").Value);
+
+            var wedstrijd = await _context.Wedstrijden
+                .Include(w => w.Team1User1)
+                .Include(w => w.Team2User1)
+                .FirstOrDefaultAsync(w => w.WedstrijdID == id);
+
+            if (wedstrijd == null)
+            {
+                return NotFound();
+            }
+
+            if (wedstrijd.Akkoord == false)
+            {
+                return Conflict("Wedstrijd is al gerapporteerd");
+            }
+
+            if(wedstrijd.Team1User1.PloegID != ploegID && wedstrijd.Team2User1.PloegID != ploegID)
+            {
+                return Unauthorized();
+            }
+
+            wedstrijd.Akkoord = false;
+            _context.Entry(wedstrijd).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!WedstrijdExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
         // POST: api/Wedstrijd
         [HttpPost]
         public async Task<ActionResult<Wedstrijd>> PostWedstrijd(Wedstrijd wedstrijd)
@@ -265,6 +318,7 @@ namespace ApplicationChallengeAPI.Controllers
                     new Wedstrijd
                     {
                         WedstrijdID = w.WedstrijdID,
+                        Akkoord = w.Akkoord,
                         MatchContext = new MatchContext
                         {
                             MatchContextID = w.MatchContext.MatchContextID,
