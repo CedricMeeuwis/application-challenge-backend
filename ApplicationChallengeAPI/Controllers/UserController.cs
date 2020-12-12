@@ -59,8 +59,9 @@ namespace ApplicationChallengeAPI.Controllers
         public async Task<ActionResult<IEnumerable<User>>> GetUsersZonderPloeg()
         {
             bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            bool isKapitein = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsKapitein").Value);
 
-            if (!isAdmin)
+            if (!isAdmin && !isKapitein)
             {
                 return Unauthorized();
             }
