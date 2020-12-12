@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ApplicationChallengeAPI.Data;
 using ApplicationChallengeAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ApplicationChallengeAPI.Controllers
 {
@@ -22,16 +23,28 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // GET: api/Tafel
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Tafel>>> GetTafels()
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
             return await _context.Tafels.ToListAsync();
         }
 
         // GET: api/Tafel/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Tafel>> GetTafel(int id)
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
             var tafel = await _context.Tafels.FindAsync(id);
 
             if (tafel == null)
@@ -43,9 +56,16 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // PUT: api/Tafel/5
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTafel(int id, Tafel tafel)
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
+
             if (id != tafel.TafelID)
             {
                 return BadRequest();
@@ -73,9 +93,16 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // POST: api/Tafel
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Tafel>> PostTafel(Tafel tafel)
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
+
             _context.Tafels.Add(tafel);
             try
             {
@@ -97,9 +124,15 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // DELETE: api/Tafel/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Tafel>> DeleteTafel(int id)
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
             var tafel = await _context.Tafels.FindAsync(id);
             if (tafel == null)
             {

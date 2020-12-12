@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ApplicationChallengeAPI.Data;
 using ApplicationChallengeAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ApplicationChallengeAPI.Controllers
 {
@@ -22,15 +23,28 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // GET: api/Tournooi
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Tournooi>>> GetTournooien()
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
             return await _context.Tournooien.ToListAsync();
         }
+        [Authorize]
         // GET: api/Tournooi/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Tournooi>> GetTournooi(int id)
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
+
             var tournooi = await _context.Tournooien.SingleOrDefaultAsync(i => i.TournooiID == id);
 
             if (tournooi == null)
@@ -42,9 +56,15 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // PUT: api/Tournooi/5
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTournooi(int id, Tournooi tournooi)
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
             if (id != tournooi.TournooiID)
             {
                 return BadRequest();
@@ -72,9 +92,15 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // POST: api/Tournooi
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Tournooi>> PostTournooi(Tournooi tournooi)
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
             _context.Tournooien.Add(tournooi);
             await _context.SaveChangesAsync();
 
@@ -82,9 +108,16 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // DELETE: api/Tournooi/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Tournooi>> DeleteTournooi(int id)
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
+
             var tournooi = await _context.Tournooien.FindAsync(id);
             if (tournooi == null)
             {
