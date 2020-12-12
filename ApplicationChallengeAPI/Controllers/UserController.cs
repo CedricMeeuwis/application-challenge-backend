@@ -238,6 +238,174 @@ namespace ApplicationChallengeAPI.Controllers
             return user;
         }
 
+        [Authorize]
+        [HttpPut("AddToMyTeam")]
+        public async Task<ActionResult<User>> AddUserToTeam(int userID)
+        {
+            //Check of user kapitein is
+            if (string.IsNullOrWhiteSpace(User.Claims.FirstOrDefault(c => c.Type == "IsKapitein").Value))
+            {
+                return NotFound();
+            }
+            bool isKapitein = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsKapitein").Value);
+
+            if(!isKapitein)
+            {
+                return Unauthorized("Je bent geen kapitein van een team");
+            }
+            //check of user bestaat
+            var user = await _context.Users.FindAsync(userID);
+            if(user == null)
+            {
+                return NotFound();
+            }
+            //check of user niet in een team zit
+            if(user.PloegID != 0 && user.PloegID != null)
+            {
+                return Unauthorized("De user zit al in een team");
+            }
+            //Zet teamID van user op dezelfde als de kapitein
+            int ploegID = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "PloegID").Value);
+            user.PloegID = ploegID;
+
+            _context.Entry(user).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(userID))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return user;
+        }
+
+        [Authorize]
+        [HttpPut("RemoveFromMyTeam")]
+        public async Task<ActionResult<User>> RemoveUserFromTeam(int userID)
+        {
+            //Check of user kapitein is
+            if (string.IsNullOrWhiteSpace(User.Claims.FirstOrDefault(c => c.Type == "IsKapitein").Value))
+            {
+                return NotFound();
+            }
+            bool isKapitein = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsKapitein").Value);
+
+            if (!isKapitein)
+            {
+                return Unauthorized("Je bent geen kapitein van een team");
+            }
+            //check of user bestaat
+            var user = await _context.Users.FindAsync(userID);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            //check of de kapitein zichzelf niet kickt
+            int kapiteinID = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "UserID").Value);
+            if(user.UserID == kapiteinID)
+            {
+                return Conflict("Je kan jezelf niet kicken");
+            }
+
+            //check of user wel in hetzelfde team als de kapitein zit
+            int ploegID = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "PloegID").Value);
+            if (user.PloegID != ploegID)
+            {
+                return Unauthorized("De user zit niet in je team");
+            }
+            //Zet teamID van user op null
+            user.PloegID = null;
+
+            _context.Entry(user).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(userID))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return user;
+        }
+
+        [Authorize]
+        [HttpPut("SetKapiteinOfMyTeam")]
+        public async Task<ActionResult<User>> SetUserAsKapitein(int userID)
+        {
+            //Check of user kapitein is
+            if (string.IsNullOrWhiteSpace(User.Claims.FirstOrDefault(c => c.Type == "IsKapitein").Value))
+            {
+                return NotFound();
+            }
+            bool isKapitein = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsKapitein").Value);
+
+            if (!isKapitein)
+            {
+                return Unauthorized("Je bent geen kapitein van een team");
+            }
+            //check of user bestaat
+            var user = await _context.Users.FindAsync(userID);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            //check of user wel in hetzelfde team als de kapitein zit
+            int ploegID = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "PloegID").Value);
+            if (user.PloegID != ploegID)
+            {
+                return Unauthorized("De user zit niet in je team");
+            }
+            
+            //check of kapitein niet zichzelf kapitein maakt
+            int kapiteinID = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "UserID").Value);
+            if(user.UserID == kapiteinID)
+            {
+                return Conflict("Je bent al kapitein!");
+            }
+
+            //Zet User als kapitein en kapitein als user
+            var kapitein = await _context.Users.FindAsync(kapiteinID);
+            user.IsKapitein = true;
+            kapitein.IsKapitein = false;
+
+            _context.Entry(user).State = EntityState.Modified;
+            _context.Entry(kapitein).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(userID))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return user;
+        }
+
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody] User userParam)
         {
