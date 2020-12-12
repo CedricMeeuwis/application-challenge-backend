@@ -27,11 +27,17 @@ namespace ApplicationChallengeAPI.Controllers
             _context = context;
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            //var email = User.Claims.FirstOrDefault(c => c.Type == "Email").Value;
+
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
 
             //alle users zonder passwoorden
             return await _context.Users.Select(u => new User
@@ -48,9 +54,17 @@ namespace ApplicationChallengeAPI.Controllers
             }).ToListAsync();
         }
 
+        [Authorize]
         [HttpGet("Ploegloos")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsersZonderPloeg()
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
+
             return await _context.Users.Select(u => new User
             {
                 UserID = u.UserID,
@@ -66,16 +80,32 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // GET: api/User/Ploeg/1
+        [Authorize]
         [HttpGet("Ploeg/{id}")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsersByPloeg(int id)
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
+
             return await _context.Users.Where(x => x.PloegID == id).ToListAsync();
         }
 
+        [Authorize]
         // GET: api/User/Ploeg
         [HttpGet("Ploeg")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsersHasPloeg()
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
+
             return await _context.Users.Where(x => x.PloegID != null).Include(p => p.Ploeg).Select(u => new User
             {
                 UserID = u.UserID,
@@ -113,10 +143,18 @@ namespace ApplicationChallengeAPI.Controllers
             return users;
         }
 
+        [Authorize]
         // GET: api/User/1
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
+            
             var user = await _context.Users.Include(r => r.Ploeg).SingleOrDefaultAsync(i => i.UserID == id);
 
             if (user == null)
@@ -148,12 +186,14 @@ namespace ApplicationChallengeAPI.Controllers
             return Ok(user);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult<User>> PutUser(int id, User user)
         {
-            if (id != user.UserID)
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (id != user.UserID || !isAdmin)
             {
-                return BadRequest();
+                return Unauthorized();
             }
 
             if (user.Passwoord != "" && user.Passwoord != null)
@@ -229,10 +269,17 @@ namespace ApplicationChallengeAPI.Controllers
             return Ok(user);
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult<User>> DeleteUser(int id)
         {
             var user = await _context.Users.FindAsync(id);
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (id != user.UserID || !isAdmin)
+            {
+                return Unauthorized();
+            }
+
             if (user == null)
             {
                 return NotFound();

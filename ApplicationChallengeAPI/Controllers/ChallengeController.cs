@@ -22,6 +22,7 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // GET: api/Challenge
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Challenge>>> GetChallenges()
         {

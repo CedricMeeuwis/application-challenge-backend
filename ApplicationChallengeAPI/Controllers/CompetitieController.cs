@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ApplicationChallengeAPI.Data;
 using ApplicationChallengeAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ApplicationChallengeAPI.Controllers
 {
@@ -22,16 +23,28 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // GET: api/Competitie
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Competitie>>> GetCompetities()
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
             return await _context.Competities.ToListAsync();
         }
 
         // GET: api/Competitie/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Competitie>> GetCompetitie(int id)
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
             var competitie = await _context.Competities.FindAsync(id);
 
             if (competitie == null)
@@ -43,9 +56,16 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // PUT: api/Competitie/5
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCompetitie(int id, Competitie competitie)
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
+
             if (id != competitie.CompetitieID)
             {
                 return BadRequest();
@@ -73,9 +93,15 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // POST: api/Competitie
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Competitie>> PostCompetitie(Competitie competitie)
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
             _context.Competities.Add(competitie);
             try
             {
@@ -97,9 +123,15 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // DELETE: api/Competitie/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Competitie>> DeleteCompetitie(int id)
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
             var competitie = await _context.Competities.FindAsync(id);
             if (competitie == null)
             {

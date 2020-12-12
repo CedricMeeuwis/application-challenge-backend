@@ -21,11 +21,17 @@ namespace ApplicationChallengeAPI.Controllers
         {
             _context = context;
         }
-
+        
         // GET: api/Ploeg
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Ploeg>>> GetPloegen()
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
             return await _context.Ploegen.Include(u => u.Leden).ToListAsync();
         }
 
@@ -65,6 +71,7 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // GET: api/Ploeg/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Ploeg>> GetPloeg(int id)
         {
@@ -79,6 +86,7 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // PUT: api/Ploeg/5
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPloeg(int id, Ploeg ploeg)
         {
@@ -109,9 +117,15 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // POST: api/Ploeg
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Ploeg>> PostPloeg(Ploeg ploeg)
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
             _context.Ploegen.Add(ploeg);
             await _context.SaveChangesAsync();
 
@@ -119,9 +133,16 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // DELETE: api/Ploeg/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Ploeg>> DeletePloeg(int id)
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
+
             var users = await _context.Users.Where(x => x.PloegID == id).ToListAsync();
 
             foreach (User user in users)

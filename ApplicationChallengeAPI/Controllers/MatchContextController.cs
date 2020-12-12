@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ApplicationChallengeAPI.Data;
 using ApplicationChallengeAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ApplicationChallengeAPI.Controllers
 {
@@ -22,15 +23,27 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // GET: api/MatchContext
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MatchContext>>> GetMatchContexten()
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
             return await _context.MatchContexten.ToListAsync();
         }
         // GET: api/MatchContext/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<MatchContext>> GetMatchContext(int id)
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
             var ploeg = await _context.MatchContexten.SingleOrDefaultAsync(i => i.MatchContextID == id);
 
             if (ploeg == null)
@@ -42,9 +55,16 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // PUT: api/MatchContext/5
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMatchContext(int id, MatchContext ploeg)
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
+
             if (id != ploeg.MatchContextID)
             {
                 return BadRequest();
@@ -72,9 +92,16 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // POST: api/MatchContext
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<MatchContext>> PostMatchContext(MatchContext ploeg)
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
+
             _context.MatchContexten.Add(ploeg);
             await _context.SaveChangesAsync();
 
@@ -82,9 +109,16 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // DELETE: api/MatchContext/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult<MatchContext>> DeleteMatchContext(int id)
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
+
             var ploeg = await _context.MatchContexten.FindAsync(id);
             if (ploeg == null)
             {

@@ -23,9 +23,16 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // GET: api/Wedstrijd
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Wedstrijd>>> GetWedstrijden()
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
+
             return await _context.Wedstrijden
                 .Include(k => k.Team1User1)
                 .Include(k => k.Team1User2)
@@ -35,9 +42,15 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // GET: api/Wedstrijd/Competitie/CompetitieId
+        [Authorize]
         [HttpGet("Competitie/{id}")]
         public async Task<ActionResult<IEnumerable<Wedstrijd>>> GetWedstrijdenOfCompetitie(int id)
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
             return await _context.Wedstrijden.Where(w => w.MatchContext.CompetitieID == id).OrderBy(w => w.MatchContext.TournooiRangschikking)
                 .Include(k => k.Team1User1)
                 .Include(k => k.Team1User2)
@@ -49,9 +62,16 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // GET: api/Tournooi/Wedstrijd
+        [Authorize]
         [HttpGet("Tournooi/{id}")]
         public async Task<ActionResult<IEnumerable<Wedstrijd>>> GetWedstrijdenOfTournooi(int id)
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
+
             return await _context.Wedstrijden.Where(w => w.MatchContext.TournooiID == id).OrderBy(w => w.MatchContext.TournooiRangschikking)
                 .Include(k => k.Team1User1)
                 .Include(k => k.Team1User2)
@@ -62,6 +82,7 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // GET: api/user/BonS/Wedstrijd
+        [Authorize]
         [HttpGet("User/BonS/{id}")]
         public async Task<ActionResult<IEnumerable<Wedstrijd>>> GetWedstrijdenOfUserBusyOrNotStarted(int id)
         {
@@ -81,9 +102,15 @@ namespace ApplicationChallengeAPI.Controllers
         }
                 
         // GET: api/Wedstrijd
+        [Authorize]
         [HttpGet("Betwisting")]
         public async Task<ActionResult<IEnumerable<Wedstrijd>>> GetBetwistingen()
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
             return await _context.Wedstrijden
                 .Where(w => w.Bezig == Bezig.Gespeeld)
                 .Where(w => w.Akkoord == false)
@@ -101,6 +128,7 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // GET: api/Wedstrijd/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Wedstrijd>> GetWedstrijd(int id)
         {
@@ -125,6 +153,7 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // GET: api/Wedstrijd/PloegStats/5
+        [Authorize]
         [HttpGet("PloegStats/{id}")]
         public async Task<ActionResult<Object>> GetPloegStats(int id)
         {
@@ -192,6 +221,7 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // PUT: api/Wedstrijd/5
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutWedstrijd(int id, Wedstrijd wedstrijd)
         {
@@ -275,9 +305,16 @@ namespace ApplicationChallengeAPI.Controllers
             return NoContent();
         }
         // POST: api/Wedstrijd
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Wedstrijd>> PostWedstrijd(Wedstrijd wedstrijd)
         {
+            bool isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin").Value);
+            if (!isAdmin)
+            {
+                return Unauthorized();
+            }
+
             _context.Wedstrijden.Add(wedstrijd);
             await _context.SaveChangesAsync();
 
@@ -285,6 +322,7 @@ namespace ApplicationChallengeAPI.Controllers
         }
 
         // DELETE: api/Wedstrijd/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Wedstrijd>> DeleteWedstrijd(int id)
         {
@@ -302,6 +340,7 @@ namespace ApplicationChallengeAPI.Controllers
             return wedstrijd;
         }
 
+        [Authorize]
         [HttpGet("User/{id}")]
         public async Task<ActionResult<IEnumerable<Wedstrijd>>> GetWedstrijdenUser(int id)
         {
