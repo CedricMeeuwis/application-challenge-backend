@@ -119,7 +119,11 @@ namespace ApplicationChallengeAPI.Controllers
                 Wedstrijd challengeWedstrijd = new Wedstrijd
                 {
                     Team1User1ID = challenge.UitdagerUserID,
-                    Team2User1ID = userID
+                    Team2User1ID = userID,
+                    Bezig = Bezig.NogTeSpelen,
+                    Team1Score = 0,
+                    Team2Score = 0,
+                    Akkoord = true
                 };
 
                 _context.Wedstrijden.Add(challengeWedstrijd);
